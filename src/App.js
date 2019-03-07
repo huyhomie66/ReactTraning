@@ -9,12 +9,13 @@ class App extends Component {
       username: '',
       data: [],
       PageSize: 15,
-      Page: 1,
+      Page: 2,
       submitdata: '',
       RenderView: false,
       ViewData: [],
       nameUrl: [],
-      view: "view"
+      view: "view",
+      click: []
     })
   }
   changeUserSearch = (e) => {
@@ -44,7 +45,8 @@ class App extends Component {
     // console.log(e.target.name);
     this.setState({
       RenderView: true,
-      nameUrl: e.target.name
+      nameUrl: e.target.name,
+      click: this.state.ViewData.length
     });
   }
   componentDidMount = () => {
@@ -69,7 +71,6 @@ class App extends Component {
           if (data.status === 200) {
             return data.json();
           }
-
         })
         .then(jsonStr => {
           this.setState({
@@ -87,20 +88,18 @@ class App extends Component {
           data => {
             this.setState({
               ViewData: data,
-              RenderView: false
+              RenderView: false,
+            
             })
           }
         )
-
     }
   }
   render() {
-
-
-    const ViewData = typeof this.state.ViewData !== 'undefined' ?
+    console.log(this.state.ViewData.length);
+    const ViewData = typeof this.state.ViewData !== 'undefined'  ?
       this.state.ViewData.map(
-        (data, index) =>
-
+        (data, index) => 
           <tr key={index}>
             <td>
               {data.login}
@@ -111,21 +110,20 @@ class App extends Component {
           Can't find View data</td>
       </tr>
 
-    const RenderData = typeof this.state.data !== 'undefined' ?
 
+    const RenderData = typeof this.state.data !== 'undefined' ?
       this.state.data.map(
         (data, index) => {
-          // console.log(data);
           return (
             <tr key={index} >
               <td>
                 {data.name}
               </td>
               <td>
-                ({this.state.click}/{data.stargazers_count})
+                ({this.state.click[index]}/{data.stargazers_count})
               </td>
               <td>
-                <input style={{backgroundColor:"transparent",  border : "2px solid black", }} name={data.stargazers_url} type="button" onClick={this.ViewRateStar} value="View" />
+                <input style={{ backgroundColor: "transparent", border: "2px solid black",marginLeft:"130px" }} name={data.stargazers_url} type="button" onClick={this.ViewRateStar} value="View" />
               </td>
             </tr>
           )
@@ -142,21 +140,20 @@ class App extends Component {
         </form>
 
         <table style={styleTable} >
-          <tbody style={{float: "left"}}>
+          <tbody style={{ float: "left" }}>
             {RenderData}
-           
+
           </tbody>
-          <tbody style={{float: "right"}}>
+
+        </table>
+
+        <table style={styleTable}>
+          <tbody style={{ float: "right" }}>
             {ViewData}
           </tbody>
         </table>
-
-        {/* <table style={styleTable}>
-          <tbody>
-            {ViewData}
-          </tbody>
-        </table> */}
-
+        <div style={{ clear: "both" }}>
+        </div>
         <div style={{ display: "inline-block" }}>
 
           <button onClick={this.PreviousPage} style={stypeButtonLeft}>Previous</button>
@@ -172,7 +169,8 @@ const styleTable = {
   width: "400px",
   marginLeft: "23px",
   marginBottom: "10px",
-  marginTop: "10px"
+  marginTop: "10px",
+  float: "left"
 }
 
 const styleInput = {
